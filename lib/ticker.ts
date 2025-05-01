@@ -3,6 +3,9 @@ export type TickerOptions = {
   autoStart?: boolean,
 };
 
+/**
+ * The audio ticker, usually used to update the {@link Clock}
+ */
 export default class Ticker {
   private _callbacks: Function[] = [];
   private _frameID: number = NaN;
