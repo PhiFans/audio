@@ -1,9 +1,9 @@
-export function setupCounter(element: HTMLButtonElement) {
-  let counter = 0
-  const setCounter = (count: number) => {
-    counter = count
-    element.innerHTML = `count is ${counter}`
-  }
-  element.addEventListener('click', () => setCounter(++counter))
-  setCounter(0)
+/// <reference types="./lib.d.ts" />
+
+import Ticker from './ticker';
+
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const GlobalAudioCtx = new AudioCtx({ latencyHint: 'interactive' });
+const GlobalAudioTicker = new Ticker();
+
 }
