@@ -1,3 +1,4 @@
+import { Channel } from './channel';
 import { GlobalAudioCtx } from './const';
 
 /**
@@ -6,11 +7,35 @@ import { GlobalAudioCtx } from './const';
 export class Bus {
   readonly audioCtx = GlobalAudioCtx;
   readonly gain: GainNode;
-  readonly channels = new Map<string, unknown>();
+  readonly channels = new Map<string, Channel>();
 
   constructor() {
     this.gain = this.audioCtx.createGain();
     this.gain.connect(this.audioCtx.destination);
+  }
+
+  /**
+   * Create a new audio channel.
+   * @param {string} name - The audio channel name.
+   * @returns {Channel} The new audio channel.
+   */
+  createChannel(name: string): Channel {
+    const newChannel = new Channel(this);
+    this.channels.set(name, newChannel);
+    return newChannel;
+  }
+
+  /**
+   * Delete an audio channel.
+   * @param {string} name - The audio channel name.
+   * @returns {boolean} Return true if the channel exists.
+   */
+  removeChannel(name: string): boolean {
+    const channel = this.channels.get(name);
+    if (!channel) return false;
+    
+    channel.destroy();
+    return this.channels.delete(name);
   }
 
   /**
