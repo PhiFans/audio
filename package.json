@@ -1,7 +1,14 @@
 {
-  "name": "audio",
-  "private": true,
+  "name": "@phifans/audio",
   "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhiFans/audio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PhiFans/audio/issues"
+  },
   "type": "module",
   "files": [
     "dist",
