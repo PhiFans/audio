@@ -29,6 +29,14 @@ export default class Ticker {
     this._frameID = NaN;
   }
 
+  add(callback: Function) {
+    this._callbacks.push(callback);
+  }
+
+  remove(callback: Function) {
+    this._callbacks = this._callbacks.filter((e) => e !== callback);
+  }
+
   private tick() {
     if (isNaN(this._frameID)) return;
 
