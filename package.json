@@ -14,13 +14,13 @@
     "dist",
     "index.d.ts"
   ],
-  "main": "./dist/counter.umd.cjs",
-  "module": "./dist/counter.js",
-  "types": "./index.d.ts",
+  "main": "./dist/phifans-audio.umd.cjs",
+  "module": "./dist/phifans-audio.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     "types": "./index.d.ts",
-    "import": "./dist/counter.js",
-    "require": "./dist/counter.umd.cjs"
+    "import": "./dist/phifans-audio.js",
+    "require": "./dist/phifans-audio.umd.cjs"
   },
   "scripts": {
     "dev": "vite",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "typescript": "~5.7.3",
-    "vite": "^6.1.1"
+    "vite": "^6.1.1",
+    "vite-plugin-dts": "^4.5.3"
   }
 }
