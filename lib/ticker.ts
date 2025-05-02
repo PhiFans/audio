@@ -4,7 +4,7 @@ export type TickerOptions = {
 };
 
 /**
- * The audio ticker, usually used to update the {@link Clock}
+ * The audio ticker, usually used to update the {@link Clock} and {@link Channel#clipQueue}.
  */
 export default class Ticker {
   private _callbacks: Function[] = [];
