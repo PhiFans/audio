@@ -6,8 +6,11 @@ export default defineConfig({
     lib: {
       entry: './lib/main.ts',
       name: '@phifans/audio',
-      formats: [ 'es', 'umd' ],
+      formats: [ 'es' ],
       fileName: 'phifans-audio',
+    },
+    rollupOptions: {
+      external: [ 'audio-decode' ],
     },
   },
   plugins: [

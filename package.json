@@ -10,17 +10,13 @@
     "url": "https://github.com/PhiFans/audio/issues"
   },
   "type": "module",
-  "files": [
-    "dist",
-    "index.d.ts"
-  ],
-  "main": "./dist/phifans-audio.umd.cjs",
+  "files": [ "dist" ],
+  "main": "./dist/phifans-audio.js",
   "module": "./dist/phifans-audio.js",
   "types": "./dist/index.d.ts",
   "exports": {
     "types": "./index.d.ts",
-    "import": "./dist/phifans-audio.js",
-    "require": "./dist/phifans-audio.umd.cjs"
+    "import": "./dist/phifans-audio.js"
   },
   "scripts": {
     "dev": "vite",
