@@ -27,7 +27,7 @@ export class Clip {
     this._audioCtx = audioCtx;
     this._channel = channel;
 
-    this.play = this.play.bind(this);
+    this._play = this._play.bind(this);
     this.stop = this.stop.bind(this);
   }
 
