@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      audio-decode:
+        specifier: ^2.2.2
+        version: 2.2.2
     devDependencies:
       typescript:
         specifier: ~5.7.3
@@ -187,6 +191,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@eshaz/web-worker@1.2.2':
+    resolution: {integrity: sha512-WxXiHFmD9u/owrzempiDlBB1ZYqiLnm9s6aPc8AlFQalq2tKmqdmMr9GXOupDgzXtqnBipj8Un0gkIm7Sjf8mw==}
+
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
 
@@ -334,6 +341,14 @@ packages:
   '@rushstack/ts-command-line@5.0.1':
     resolution: {integrity: sha512-bsbUucn41UXrQK7wgM8CNM/jagBytEyJqXw/umtI8d68vFm1Jwxh1OtLrlW7uGZgjCWiiPH6ooUNa1aVsuVr3Q==}
 
+  '@thi.ng/bitstream@2.4.19':
+    resolution: {integrity: sha512-aa4085YAwjglHu9vA6ypKLtrc/u1WCoNPybhvDgTtvGjpltXTlmsgE6aNwJA5NDM1ZqbMZ2uqM63qY7jddxLGw==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/errors@2.5.33':
+    resolution: {integrity: sha512-6aKtUITb4nj+2KixXOoawNVJGY6P56Wnmv2YZnQ8SsnKNZAcL7GPbP6/KGg+D2JhnbJPjUDFcH0Fq8bxY+FWoQ==}
+    engines: {node: '>=18'}
+
   '@types/argparse@1.0.38':
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
 
@@ -369,6 +384,15 @@ packages:
   '@vue/shared@3.5.13':
     resolution: {integrity: sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==}
 
+  '@wasm-audio-decoders/common@9.0.6':
+    resolution: {integrity: sha512-E9n3jvsiO0a7+ZNKOJZB6Y2akKbU1dj+6Cena8aZgkgZE27pfhMwgJlt0qw2CpKBZn9nOC3HmJu6jmq/cbuNfQ==}
+
+  '@wasm-audio-decoders/flac@0.2.6':
+    resolution: {integrity: sha512-NYn7F93cDbJgI9XFYjz45gotfChMUKRzMgdHhwj4oBJ4TTLowQoexU0KVhf9pdlKvcsQ9vkfuJDxisH/dWbXOg==}
+
+  '@wasm-audio-decoders/ogg-vorbis@0.1.17':
+    resolution: {integrity: sha512-Cb0i1BiXsW8YrFif1DC5NBaPJ1owSbP+fRqxNpyUz1Hd4OApwE68JtkiIWxTwDB1+w5Cu1EqdGGoO3z3Lx9Gyg==}
+
   acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
     engines: {node: '>=0.4.0'}
@@ -402,6 +426,16 @@ packages:
   argparse@1.0.10:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
 
+  audio-buffer@5.0.0:
+    resolution: {integrity: sha512-gsDyj1wwUp8u7NBB+eW6yhLb9ICf+0eBmDX8NGaAS00w8/fLqFdxUlL5Ge/U8kB64DlQhdonxYC59dXy1J7H/w==}
+
+  audio-decode@2.2.2:
+    resolution: {integrity: sha512-xyh7z6dpRT+5Ez4ggV2cEkSShkDvvIBBmVPR3kYY7uIBqRO1BGNjofip6JnjBnvezhrU3ypBGZjepyKFDZWnDw==}
+
+  audio-type@2.2.1:
+    resolution: {integrity: sha512-En9AY6EG1qYqEy5L/quryzbA4akBpJrnBZNxeKTqGHC2xT9Qc4aZ8b7CcbOMFTTc/MGdoNyp+SN4zInZNKxMYA==}
+    engines: {node: '>=14'}
+
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
@@ -410,6 +444,9 @@ packages:
 
   brace-expansion@2.0.1:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
+
+  codec-parser@2.5.0:
+    resolution: {integrity: sha512-Ru9t80fV8B0ZiixQl8xhMTLru+dzuis/KQld32/x5T/+3LwZb0/YvQdSKytX9JqCnRdiupvAvyYJINKrXieziQ==}
 
   compare-versions@6.1.1:
     resolution: {integrity: sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==}
@@ -532,6 +569,9 @@ packages:
   mlly@1.7.4:
     resolution: {integrity: sha512-qmdSIPC4bDJXgZTCR7XosJiNKySV7O215tsPtDN9iEO/7q/76b/ijtgRu/+epFXSJhijtTCCGp3DWS549P3xKw==}
 
+  mpg123-decoder@1.0.1:
+    resolution: {integrity: sha512-6WPXPjEHVWm5KOYWNh9kyqLXEF6mxaSf+MoVSAPqmTN7TY1BcM2C/GDbYo9930h2TLLzUmRgfylFEpyv820CFA==}
+
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -542,6 +582,16 @@ packages:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  node-wav@0.0.2:
+    resolution: {integrity: sha512-M6Rm/bbG6De/gKGxOpeOobx/dnGuP0dz40adqx38boqHhlWssBJZgLCPBNtb9NkrmnKYiV04xELq+R6PFOnoLA==}
+    engines: {node: '>=4.4.0'}
+
+  ogg-opus-decoder@1.6.15:
+    resolution: {integrity: sha512-rS9kXNUHHPKhcDEys3JREjYZQgGFYrIx8gtwiRxflb28f+gsvwknOyCjRmTlcg1KKNOhUZXZuF/asE2tGht3IA==}
+
+  opus-decoder@0.7.8:
+    resolution: {integrity: sha512-OOopkQVcjjmWbfqQe7iu+RRKK3XKB46inYUm12RnCEtlkBELNa5V/1N477lyWv4Hyhv/4mwljt/MQXd1omT5Ug==}
 
   path-browserify@1.0.1:
     resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
@@ -573,6 +623,9 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
+  qoa-format@1.0.1:
+    resolution: {integrity: sha512-dMB0Z6XQjdpz/Cw4Rf6RiBpQvUSPCfYlQMWvmuWlWkAT7nDQD29cVZ1SwDUB6DYJSitHENwbt90lqfI+7bvMcw==}
+
   quansync@0.2.10:
     resolution: {integrity: sha512-t41VRkMYbkHyCYmOvx/6URnN80H7k4X0lLdBMGsz+maAwrJQYB1djpV6vHrQIBE0WBSGqhtEHrK9U3DWWH8v7A==}
 
@@ -594,6 +647,9 @@ packages:
     resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  simple-yenc@1.0.4:
+    resolution: {integrity: sha512-5gvxpSd79e9a3V4QDYUqnqxeD4HGlhCakVpb6gMnDD7lexJggSBJRBO5h52y/iJrdXRilX9UCuDaIJhSWm5OWw==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -791,6 +847,8 @@ snapshots:
   '@esbuild/win32-x64@0.25.3':
     optional: true
 
+  '@eshaz/web-worker@1.2.2': {}
+
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
   '@microsoft/api-extractor-model@7.30.6':
@@ -926,6 +984,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
+  '@thi.ng/bitstream@2.4.19':
+    dependencies:
+      '@thi.ng/errors': 2.5.33
+
+  '@thi.ng/errors@2.5.33': {}
+
   '@types/argparse@1.0.38': {}
 
   '@types/estree@1.0.7': {}
@@ -975,6 +1039,21 @@ snapshots:
 
   '@vue/shared@3.5.13': {}
 
+  '@wasm-audio-decoders/common@9.0.6':
+    dependencies:
+      '@eshaz/web-worker': 1.2.2
+      simple-yenc: 1.0.4
+
+  '@wasm-audio-decoders/flac@0.2.6':
+    dependencies:
+      '@wasm-audio-decoders/common': 9.0.6
+      codec-parser: 2.5.0
+
+  '@wasm-audio-decoders/ogg-vorbis@0.1.17':
+    dependencies:
+      '@wasm-audio-decoders/common': 9.0.6
+      codec-parser: 2.5.0
+
   acorn@8.14.1: {}
 
   ajv-draft-04@1.0.0(ajv@8.13.0):
@@ -1005,6 +1084,21 @@ snapshots:
     dependencies:
       sprintf-js: 1.0.3
 
+  audio-buffer@5.0.0: {}
+
+  audio-decode@2.2.2:
+    dependencies:
+      '@wasm-audio-decoders/flac': 0.2.6
+      '@wasm-audio-decoders/ogg-vorbis': 0.1.17
+      audio-buffer: 5.0.0
+      audio-type: 2.2.1
+      mpg123-decoder: 1.0.1
+      node-wav: 0.0.2
+      ogg-opus-decoder: 1.6.15
+      qoa-format: 1.0.1
+
+  audio-type@2.2.1: {}
+
   balanced-match@1.0.2: {}
 
   brace-expansion@1.1.11:
@@ -1015,6 +1109,8 @@ snapshots:
   brace-expansion@2.0.1:
     dependencies:
       balanced-match: 1.0.2
+
+  codec-parser@2.5.0: {}
 
   compare-versions@6.1.1: {}
 
@@ -1140,11 +1236,27 @@ snapshots:
       pkg-types: 1.3.1
       ufo: 1.6.1
 
+  mpg123-decoder@1.0.1:
+    dependencies:
+      '@wasm-audio-decoders/common': 9.0.6
+
   ms@2.1.3: {}
 
   muggle-string@0.4.1: {}
 
   nanoid@3.3.11: {}
+
+  node-wav@0.0.2: {}
+
+  ogg-opus-decoder@1.6.15:
+    dependencies:
+      '@wasm-audio-decoders/common': 9.0.6
+      codec-parser: 2.5.0
+      opus-decoder: 0.7.8
+
+  opus-decoder@0.7.8:
+    dependencies:
+      '@wasm-audio-decoders/common': 9.0.6
 
   path-browserify@1.0.1: {}
 
@@ -1175,6 +1287,10 @@ snapshots:
       source-map-js: 1.2.1
 
   punycode@2.3.1: {}
+
+  qoa-format@1.0.1:
+    dependencies:
+      '@thi.ng/bitstream': 2.4.19
 
   quansync@0.2.10: {}
 
@@ -1215,6 +1331,8 @@ snapshots:
   semver@7.5.4:
     dependencies:
       lru-cache: 6.0.0
+
+  simple-yenc@1.0.4: {}
 
   source-map-js@1.2.1: {}
 

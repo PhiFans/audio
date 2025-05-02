@@ -1,7 +1,10 @@
 /// <reference types="./lib.d.ts" />
 
-import { GlobalAudioClock } from './const';
+import { GlobalAudioClock, GlobalAudioCtx } from './const';
 import { Channel } from './channel';
+import { decodeAudio } from './utils';
+
+export type ClipSource = Blob | ArrayBuffer | string;
 
 export class Clip {
   readonly source: AudioBuffer;
@@ -26,6 +29,18 @@ export class Clip {
 
     this.play = this.play.bind(this);
     this.stop = this.stop.bind(this);
+  }
+
+  static from(source: ClipSource, channel: Channel | null = null) {
+    return new Promise<Clip>(async (res, rej) => {
+      try {
+        const buffer = await decodeAudio(source);
+        const result = new Clip(GlobalAudioCtx, buffer, channel);
+        res(result);
+      } catch (e) {
+        rej(e);
+      }
+    });
   }
 
   play() {

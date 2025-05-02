@@ -20,5 +20,6 @@ const _resumeAudioCtx = async () => {
 window.addEventListener('load', () => {
   if (GlobalAudioCtx.state === 'running') return;
 
+  resumeAudioCtx(GlobalAudioCtx).then();
   window.addEventListener('pointerdown', _resumeAudioCtx);
 });
