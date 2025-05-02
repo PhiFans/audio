@@ -90,6 +90,23 @@ export class Clip {
     this._status = -1;
   }
 
+  seek(seconds: number) {
+    if (!this._channel) return;
+    if (this._status === -1) return;
+
+    const isPlayingBefore = this._status === 1;
+    this.pause();
+    this._startTime = this._pausedTime - seconds;
+
+    if (this._startTime > this._pausedTime) this._startTime = this._pausedTime;
+    if (isPlayingBefore) this.play();
+  }
+
+  destroy() {
+    if (!this._channel) return;
+    if (this._status !== -1) this.stop();
+  }
+
   private _disconnectBuffer() {
     if (!this._buffer) return;
 
