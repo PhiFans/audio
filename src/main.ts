@@ -1,23 +1,91 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import { setupCounter } from '../lib/main'
+import { Bus, Clip } from '../lib/main';
+import { timeToString } from './utils';
+import './style.css';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+const qs = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector);
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const doms = {
+  fileImport: qs<HTMLInputElement>('#file-import'),
+  progressBar: qs<HTMLInputElement>('#progress-bar'),
+  volumeBar: qs<HTMLInputElement>('#volume-bar'),
+  playButton: qs<HTMLButtonElement>('#button-play'),
+  pauseButton: qs<HTMLButtonElement>('#button-pause'),
+  stopButton: qs<HTMLButtonElement>('#button-stop'),
+  timeCurrent: qs<HTMLDivElement>('#time-current'),
+  timeTotal: qs<HTMLDivElement>('#time-total'),
+};
+
+const audioBus = new Bus();
+const audioChannel = audioBus.createChannel('main');
+let audioClip: Clip | null = null;
+let progressBarClockID: number = NaN;
+
+doms.fileImport?.addEventListener('input', () => {
+  const { files } = doms.fileImport!;
+  if (!files) return;
+  const [ file ] = files;
+  if (!file) return;
+
+  Clip.from(file)
+    .then((e) => {
+      if (audioClip) {
+        audioClip.destroy();
+        audioClip = null;
+      }
+
+      audioClip = e;
+      audioClip.channel = audioChannel;
+
+      doms.timeTotal!.innerText = timeToString(audioClip.duration);
+      doms.progressBar!.max = audioClip.duration.toString();
+
+      console.log(audioClip);
+    })
+    .catch((e) => console.error(e));
+});
+
+doms.progressBar?.addEventListener('input', () => {
+  if (!audioClip) return;
+
+  const { value: _value } = doms.progressBar!;
+  const value = parseInt(_value);
+  if (isNaN(value)) return;
+
+  audioClip.seek(value);
+  doms.timeCurrent!.innerText = timeToString(audioClip.currentTime);
+});
+
+doms.playButton?.addEventListener('click', () => {
+  if (!audioClip) return;
+  audioClip.play();
+});
+
+doms.pauseButton?.addEventListener('click', () => {
+  if (!audioClip) return;
+  audioClip.pause();
+});
+
+doms.stopButton?.addEventListener('click', () => {
+  if (!audioClip) return;
+  audioClip.stop();
+});
+
+doms.volumeBar?.addEventListener('input', () => {
+  const { value: _value } = doms.volumeBar!;
+  const value = parseFloat(_value);
+  if (isNaN(value)) return;
+
+  audioChannel.volume = value;
+});
+
+window.addEventListener('load', () => {
+  progressBarClockID = setInterval(() => {
+    if (!audioClip) return;
+
+    doms.timeCurrent!.innerText = timeToString(audioClip.currentTime);
+    doms.progressBar!.value = audioClip.currentTime.toString();
+  }, 500);
+})
+
+console.log(audioBus);
+console.log(doms);
