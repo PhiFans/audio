@@ -18,7 +18,6 @@ const doms = {
 const audioBus = new Bus();
 const audioChannel = audioBus.createChannel('main');
 let audioClip: Clip | null = null;
-let progressBarClockID: number = NaN;
 
 doms.fileImport?.addEventListener('input', () => {
   const { files } = doms.fileImport!;
@@ -79,7 +78,7 @@ doms.volumeBar?.addEventListener('input', () => {
 });
 
 window.addEventListener('load', () => {
-  progressBarClockID = setInterval(() => {
+  setInterval(() => {
     if (!audioClip) return;
 
     doms.timeCurrent!.innerText = timeToString(audioClip.currentTime);
@@ -88,4 +87,3 @@ window.addEventListener('load', () => {
 })
 
 console.log(audioBus);
-console.log(doms);
