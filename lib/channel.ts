@@ -1,8 +1,11 @@
 import { Bus } from './bus';
 import { Clip } from './clip';
 import { GlobalAudioTicker, GlobalAudioCtx } from './const';
-import Ticker from './ticker';
+import { Ticker } from './ticker';
 
+/**
+ * 
+ */
 export class Channel {
   readonly bus: Bus;
   readonly ticker: Ticker = GlobalAudioTicker;

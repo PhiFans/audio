@@ -1,7 +1,7 @@
 /// <reference types="./lib.d.ts" />
 
-import Ticker from './ticker';
-import Clock from './clock';
+import { Ticker } from './ticker';
+import { Clock } from './clock';
 import { resumeAudioCtx } from './utils';
 
 const AudioCtx = window.AudioContext || window.webkitAudioContext;

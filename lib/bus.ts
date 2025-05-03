@@ -1,12 +1,42 @@
 import { Channel } from './channel';
-import { GlobalAudioCtx } from './const';
+import { GlobalAudioCtx, GlobalAudioClock, GlobalAudioTicker } from './const';
 
 /**
- * The main audio bus, used to connect channel(s) and decode audio file.
+ * The audio bus is the root entry of the entire audio structure.
+ * 
+ * ```js
+ * const bus = new Bus();
+ * const channel = bus.createChannel('main');
+ * const clip = await Clip.from('https://example.com/test.mp3');
+ * 
+ * clip.channel = channel;
+ * clip.play();
+ * ```
  */
 export class Bus {
+  /**
+   * The global AudioContext.
+   */
   readonly audioCtx = GlobalAudioCtx;
+
+  /**
+   * The global {@link Clock}.
+   */
+  readonly clock = GlobalAudioClock;
+
+  /**
+   * The global {@link Ticker}.
+   */
+  readonly ticker = GlobalAudioTicker;
+
+  /**
+   * The [`GainNode`](https://developer.mozilla.org/docs/Web/API/GainNode) of the audio bus, used to control the master volume.
+   */
   readonly gain: GainNode;
+
+  /**
+   * Channels in this bus.
+   */
   readonly channels = new Map<string, Channel>();
 
   constructor() {

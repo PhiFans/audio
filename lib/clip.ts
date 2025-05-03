@@ -6,10 +6,28 @@ import { decodeAudio } from './utils';
 
 export type ClipSource = Blob | ArrayBuffer | string;
 
+/**
+ * The audio clip is the playable audio source.
+ * 
+ * ```js
+ * const clip = Clip.from('https://example.com/test.mp3');
+ * 
+ * // Connect the clip with an audio channel, could be used to play musics.
+ * const channel = Bus.createChannel('main');
+ * clip.channel = channel;
+ * clip.play(); // Now you can get clip progress via `clip.currentTime`.
+ * 
+ * // Or push the clip to channel queue, could be used to play SFX, hitsound, etc.
+ * channel.startTick(); // Remember to start the ticker first!
+ * channel.pushClipToQueue(clip); // The clip will be played in next frame.
+ * ```
+ */
 export class Clip {
+  /**
+   * The clip source.
+   */
   readonly source: AudioBuffer;
 
-  private readonly _audioCtx: AudioContext;
   private _buffer?: AudioBufferSourceNode = (void 0);
   private _channel: Channel | null = null;
 
@@ -18,24 +36,36 @@ export class Clip {
    */
   private _status: -1 | 0 | 1 = -1;
 
+  /**
+   * The start playing time of this clip.
+   */
   private _startTime: number = NaN;
+
+  /**
+   * The paused time of this clip.
+   */
   private _pausedTime: number = NaN;
 
-  constructor(audioCtx: AudioContext, audioBuffer: AudioBuffer, channel: Channel | null = null) {
+  constructor( audioBuffer: AudioBuffer, channel: Channel | null = null) {
     this.source = audioBuffer;
-
-    this._audioCtx = audioCtx;
     this._channel = channel;
 
     this._play = this._play.bind(this);
     this.stop = this.stop.bind(this);
   }
 
+  /**
+   * Create a clip from supported source.
+   * 
+   * @param {ClipSource} source - The source of the clip, could be File, ArrayBuffer and url link.
+   * @param {Channel | null} [channel=null] - The channel linked to this clip, leave `null` to unset.
+   * @returns {Promise<Clip>} Returns the clip itself.
+   */
   static from(source: ClipSource, channel: Channel | null = null) {
     return new Promise<Clip>(async (res, rej) => {
       try {
         const buffer = await decodeAudio(source);
-        const result = new Clip(GlobalAudioCtx, buffer, channel);
+        const result = new Clip(buffer, channel);
         res(result);
       } catch (e) {
         rej(e);
@@ -43,6 +73,9 @@ export class Clip {
     });
   }
 
+  /**
+   * Play the clip. The clip must be connected to any {@link Channel} to play.
+   */
   play() {
     if (!this._channel) throw Error('Can\'t play an audio clip directly without any channel.');
     if (this._status === 1) return;
@@ -55,7 +88,7 @@ export class Clip {
   }
 
   private _play() {
-    this._buffer = this._audioCtx.createBufferSource();
+    this._buffer = GlobalAudioCtx.createBufferSource();
     this._buffer.buffer = this.source;
     this._buffer.connect(this._channel!.gain);
     
@@ -73,6 +106,9 @@ export class Clip {
     this._buffer.onended = this.stop;
   }
 
+  /**
+   * Pause the clip playing. Use {@link Clip#play} to resume.
+   */
   pause() {
     if (this._status !== 1) return;
 
@@ -81,6 +117,9 @@ export class Clip {
     this._status = 0;
   }
 
+  /**
+   * Stop the clip playing.
+   */
   stop() {
     if (this._status === -1) return;
 
@@ -90,6 +129,12 @@ export class Clip {
     this._status = -1;
   }
 
+  /**
+   * Seek clip play progress. Note that you cannot seek when clip is not
+   * connected to any channels or {@link Clip#status} is stopped.
+   * 
+   * @param {number} seconds - Seconds that needs seek to.
+   */
   seek(seconds: number) {
     if (!this._channel) return;
     if (this._status === -1) return;
@@ -102,9 +147,13 @@ export class Clip {
     if (isPlayingBefore) this.play();
   }
 
+  /**
+   * Destroy the clip. This will stop the clip playing and disconnect to the channel.
+   */
   destroy() {
     if (!this._channel) return;
     if (this._status !== -1) this.stop();
+    this._channel = null;
   }
 
   private _disconnectBuffer() {
@@ -116,10 +165,16 @@ export class Clip {
     this._buffer = (void 0);
   }
 
+  /**
+   * The channel connected to this clip.
+   */
   get channel() {
     return this._channel;
   }
 
+  /**
+   * Set the channel connected to this clip. Leave `null` to disconnect.
+   */
   set channel(channel: Channel | null) {
     this._channel = channel;
   }
@@ -135,10 +190,16 @@ export class Clip {
     return this._status;
   }
 
+  /**
+   * The audio clip duration.
+   */
   get duration() {
     return this.source.duration;
   }
 
+  /**
+   * The current play progress of this clip. Only usable when connected with a {@link Channel}.
+   */
   get currentTime() {
     return (
       this._status === 1 ? (GlobalAudioClock.currentTime - this._startTime) :

@@ -1,14 +1,15 @@
-import Ticker from './ticker';
+import { Ticker } from './ticker';
 import { resumeAudioCtx } from './utils';
 
 /**
- * The audio clock is a replacement of {@link https://developer.mozilla.org/docs/Web/API/BaseAudioContext/currentTime `AudioContext.currentTime`}
+ * The audio clock is a replacement of [`AudioContext.currentTime`](https://developer.mozilla.org/docs/Web/API/BaseAudioContext/currentTime)
  * 
  * Special thanks to {@link https://github.com/bemusic/bemuse bemuse.ninja} for the code inspiration
  * 
- * {@link https://github.com/bemusic/bemuse/blob/68e0d5213b56502b3f5812f1d28c8d7075762717/bemuse/src/game/clock.js#L14 See original code}
+ * @see {@link https://github.com/bemusic/bemuse/blob/68e0d5213b56502b3f5812f1d28c8d7075762717/bemuse/src/game/clock.js#L14 The original code}
+ * @license AGPL-1.0-or-later
  */
-export default class Clock {
+export class Clock {
   /**
    * The current audio time.
   */
