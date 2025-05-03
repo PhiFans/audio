@@ -29,7 +29,9 @@ export class Clip {
   readonly source: AudioBuffer;
 
   private _buffer?: AudioBufferSourceNode = (void 0);
+
   private _channel: Channel | null = null;
+  private _loop: boolean = false;
 
   /**
    * See {@link Clip#status}
@@ -101,9 +103,11 @@ export class Clip {
       this._startTime = GlobalAudioClock.currentTime - pausedTime;
     }
 
+    this._buffer.loop = this._loop;
+    if (!this._loop) this._buffer.onended = this.stop;
+
     this._pausedTime = NaN;
     this._status = 1;
-    this._buffer.onended = this.stop;
   }
 
   /**
@@ -180,6 +184,22 @@ export class Clip {
   }
 
   /**
+   * Is this clip will be replayed when the audio reaches the end?
+   */
+  get loop() {
+    return this._loop;
+  }
+
+  /**
+   * Set if this clip will be replayed when the audio reaches the end.
+   * Can't be set when this clip is playing.
+   */
+  set loop(bool: boolean) {
+    if (this._buffer) return;
+    this._loop = bool;
+  }
+
+  /**
    * Play status for this clip.
    * 
    * * `-1`: Stop
@@ -201,9 +221,26 @@ export class Clip {
    * The current play progress of this clip. Only usable when connected with a {@link Channel}.
    */
   get currentTime() {
-    return (
-      this._status === 1 ? (GlobalAudioClock.currentTime - this._startTime) :
+    if (this._status === -1) return 0;
+
+    const { currentTime } = GlobalAudioClock;
+    const { duration } = this.source;
+
+    const timeDiff = (
+      this._status === 1 ? (currentTime - this._startTime) :
       this._status === 0 ? (this._pausedTime - this._startTime) : 0
     );
+
+    if (timeDiff <= duration) return timeDiff;
+    else {
+      if (this._loop) {
+        const _timeDiff = timeDiff % duration;
+        this._startTime = currentTime - _timeDiff;
+        if (!isNaN(this._pausedTime)) this._pausedTime = currentTime;
+        return _timeDiff;
+      } else {
+        return duration;
+      }
+    }
   }
 }

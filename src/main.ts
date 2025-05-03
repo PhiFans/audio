@@ -13,6 +13,7 @@ const doms = {
   stopButton: qs<HTMLButtonElement>('#button-stop'),
   timeCurrent: qs<HTMLDivElement>('#time-current'),
   timeTotal: qs<HTMLDivElement>('#time-total'),
+  loopCheck: qs<HTMLInputElement>('#check-loop'),
 };
 
 const audioBus = new Bus();
@@ -34,6 +35,7 @@ doms.fileImport?.addEventListener('input', () => {
 
       audioClip = e;
       audioClip.channel = audioChannel;
+      audioClip.loop = doms.loopCheck?.checked || false;
 
       doms.timeTotal!.innerText = timeToString(audioClip.duration);
       doms.progressBar!.max = audioClip.duration.toString();
@@ -67,6 +69,12 @@ doms.pauseButton?.addEventListener('click', () => {
 doms.stopButton?.addEventListener('click', () => {
   if (!audioClip) return;
   audioClip.stop();
+});
+
+doms.loopCheck?.addEventListener('input', () => {
+  if (!audioClip) return;
+  audioClip.loop = doms.loopCheck!.checked;
+  doms.loopCheck!.checked = audioClip!.loop;
 });
 
 doms.volumeBar?.addEventListener('input', () => {
