@@ -4,7 +4,7 @@ import { GlobalAudioTicker, GlobalAudioCtx } from './const';
 import { Ticker } from './ticker';
 
 /**
- * 
+ * The audio channel is a bridge connecting {@link Bus} and {@link Clip}.
  */
 export class Channel {
   readonly bus: Bus;
@@ -49,6 +49,9 @@ export class Channel {
     this._isTickStart = false;
   }
 
+  /**
+   * Disconnect audio nodes, clean clip queue, and stop ticker.
+   */
   destroy() {
     this.gain.disconnect();
     this.ticker.remove(this._tick);
@@ -58,6 +61,14 @@ export class Channel {
 
   /**
    * Push clip(s) to {@link Channel#clipQueue}. This/ese clip(s) will be played in next tick.
+   * 
+   * ```js
+   * const clip = Clip.from('https://example.com/test.mp3');
+   * const channel = Bus.createChannel('main');
+   * 
+   * channel.startTick(); // Remember to start the ticker first!
+   * channel.pushClipToQueue(clip); // The clip will be played in next frame.
+   * ```
    */
   pushClipToQueue(...clips: Clip[]) {
     return this.clipQueue.push(...clips);

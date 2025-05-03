@@ -10,10 +10,10 @@ export type ClipSource = Blob | ArrayBuffer | string;
  * The audio clip is the playable audio source.
  * 
  * ```js
+ * const channel = Bus.createChannel('main');
  * const clip = Clip.from('https://example.com/test.mp3');
  * 
  * // Connect the clip with an audio channel, could be used to play musics.
- * const channel = Bus.createChannel('main');
  * clip.channel = channel;
  * clip.play(); // Now you can get clip progress via `clip.currentTime`.
  * 
