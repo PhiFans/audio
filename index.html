@@ -15,20 +15,26 @@
       <h2>Play control</h2>
       <div class="progress-bar">
         <div id="time-current" class="time">00:00</div>
-        <input id="progress-bar" type="range" min="0" max="0" step="1" value="0" />
+        <input id="progress-bar" type="range" min="0" max="0" step="0.1" value="0" />
         <div id="time-total" class="time">00:00</div>
       </div>
       <div class="buttons">
         <button id="button-play">Play</button>
         <button id="button-pause">Pause</button>
         <button id="button-stop">Stop</button>
+      </div>
+      <div class="controls">
         <label>
-          <input id="check-loop" type="checkbox" />
-          Loop
+          <input id="check-loop" type="checkbox" />Loop
         </label>
-        <div class="volume">
+        <label class="range">
+          <span>Volume: <span id="text-volume">100%</span></span>
           <input id="volume-bar" type="range" min="0" max="1" step="0.01" value="1" />
-        </div>
+        </label>
+        <label class="range">
+          <span>Speed: <span id="text-speed">x1</span></span>
+          <input id="speed-bar" type="range" min="0.25" max="3" step="0.25" value="1" />
+        </label>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

@@ -23,3 +23,28 @@
   align-items: center;
   justify-content: center;
 }
+
+.control-panel .controls {
+  display: flex;
+  margin-top: 12px;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.control-panel .controls label {
+  display: block;
+}
+
+.control-panel .controls label.range {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.control-panel .controls label.range input[type=range] {
+  margin-top: 0px;
+}

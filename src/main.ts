@@ -7,13 +7,16 @@ const qs = <T extends HTMLElement>(selector: string) => document.querySelector<T
 const doms = {
   fileImport: qs<HTMLInputElement>('#file-import'),
   progressBar: qs<HTMLInputElement>('#progress-bar'),
-  volumeBar: qs<HTMLInputElement>('#volume-bar'),
   playButton: qs<HTMLButtonElement>('#button-play'),
   pauseButton: qs<HTMLButtonElement>('#button-pause'),
   stopButton: qs<HTMLButtonElement>('#button-stop'),
   timeCurrent: qs<HTMLDivElement>('#time-current'),
   timeTotal: qs<HTMLDivElement>('#time-total'),
   loopCheck: qs<HTMLInputElement>('#check-loop'),
+  volumeLabel: qs<HTMLSpanElement>('#text-volume'),
+  volumeBar: qs<HTMLInputElement>('#volume-bar'),
+  speedLabel: qs<HTMLSpanElement>('#text-speed'),
+  speedBar: qs<HTMLInputElement>('#speed-bar'),
 };
 
 const audioBus = new Bus();
@@ -36,6 +39,7 @@ doms.fileImport?.addEventListener('input', () => {
       audioClip = e;
       audioClip.channel = audioChannel;
       audioClip.loop = doms.loopCheck?.checked || false;
+      audioClip.speed = parseFloat(doms.speedBar!.value);
 
       doms.timeTotal!.innerText = timeToString(audioClip.duration);
       doms.progressBar!.max = audioClip.duration.toString();
@@ -83,15 +87,26 @@ doms.volumeBar?.addEventListener('input', () => {
   if (isNaN(value)) return;
 
   audioChannel.volume = value;
+  doms.volumeLabel!.innerText = `${Math.floor(value * 100).toString()}%`;
+});
+
+doms.speedBar?.addEventListener('input', () => {
+  const { value: _value } = doms.speedBar!;
+  const value = parseFloat(_value);
+  if (isNaN(value)) return;
+
+  if (audioClip) audioClip.speed = value;
+  doms.speedLabel!.innerText = `x${(Math.floor(value * 100) / 100).toString()}`;
 });
 
 window.addEventListener('load', () => {
   setInterval(() => {
     if (!audioClip) return;
 
-    doms.timeCurrent!.innerText = timeToString(audioClip.currentTime);
+    const newTimeStr = timeToString(audioClip.currentTime);
+    if (doms.timeCurrent!.innerText !== newTimeStr) doms.timeCurrent!.innerText = newTimeStr;
     doms.progressBar!.value = audioClip.currentTime.toString();
-  }, 500);
+  }, 100);
 })
 
 console.log(audioBus);

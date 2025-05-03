@@ -30,11 +30,23 @@ export class Clip {
 
   private _buffer?: AudioBufferSourceNode = (void 0);
 
+  /**
+   * @see {@link Clip#channel}
+   */
   private _channel: Channel | null = null;
+
+  /**
+   * @see {@link Clip#loop}
+   */
   private _loop: boolean = false;
 
   /**
-   * See {@link Clip#status}
+   * @see {@link Clip#speed}
+   */
+  private _speed: number = 1;
+
+  /**
+   * @see {@link Clip#status}
    */
   private _status: -1 | 0 | 1 = -1;
 
@@ -93,18 +105,19 @@ export class Clip {
     this._buffer = GlobalAudioCtx.createBufferSource();
     this._buffer.buffer = this.source;
     this._buffer.connect(this._channel!.gain);
+
+    this._buffer.loop = this._loop;
+    this._buffer.playbackRate.value = this._speed;
+    if (!this._loop) this._buffer.onended = this.stop;
     
-    if (isNaN(this._pausedTime)) {
+    if (isNaN(this._pausedTime) || this._loop) {
       this._buffer.start(0, 0);
       this._startTime = GlobalAudioClock.currentTime;
     } else {
       const pausedTime = this._pausedTime - this._startTime;
-      this._buffer.start(0, pausedTime);
+      this._buffer.start(0, pausedTime * this._speed);
       this._startTime = GlobalAudioClock.currentTime - pausedTime;
     }
-
-    this._buffer.loop = this._loop;
-    if (!this._loop) this._buffer.onended = this.stop;
 
     this._pausedTime = NaN;
     this._status = 1;
@@ -200,6 +213,31 @@ export class Clip {
   }
 
   /**
+   * Get the playback speed of this clip.
+   */
+  get speed() {
+    return this._speed;
+  }
+
+  /**
+   * Set the playback speed of this clip.
+   */
+  set speed(speed: number) {
+    if (this._buffer) {
+      this._buffer.playbackRate.value = speed;
+    }
+
+    if (this._status !== -1) {
+      const { currentTime } = GlobalAudioClock;
+      const timeDiff = (isNaN(this._pausedTime) ? currentTime : this._pausedTime) - this._startTime;
+      this._startTime = currentTime - (timeDiff * this._speed) / speed;
+      if (!isNaN(this._pausedTime)) this._pausedTime = currentTime;
+    }
+
+    this._speed = speed;
+  }
+
+  /**
    * Play status for this clip.
    * 
    * * `-1`: Stop
@@ -219,28 +257,12 @@ export class Clip {
 
   /**
    * The current play progress of this clip. Only usable when connected with a {@link Channel}.
+   * Can't get clip progress when {@link Clip#loop} is `true`.
    */
   get currentTime() {
+    if (this._loop) return 0;
     if (this._status === -1) return 0;
-
-    const { currentTime } = GlobalAudioClock;
-    const { duration } = this.source;
-
-    const timeDiff = (
-      this._status === 1 ? (currentTime - this._startTime) :
-      this._status === 0 ? (this._pausedTime - this._startTime) : 0
-    );
-
-    if (timeDiff <= duration) return timeDiff;
-    else {
-      if (this._loop) {
-        const _timeDiff = timeDiff % duration;
-        this._startTime = currentTime - _timeDiff;
-        if (!isNaN(this._pausedTime)) this._pausedTime = currentTime;
-        return _timeDiff;
-      } else {
-        return duration;
-      }
-    }
+    if (this._status === 1) return (GlobalAudioClock.currentTime - this._startTime) * this._speed;
+    return (this._pausedTime - this._startTime) * this._speed;
   }
 }
