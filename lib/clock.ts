@@ -7,7 +7,6 @@ import { resumeAudioCtx } from './utils';
  * Special thanks to {@link https://github.com/bemusic/bemuse bemuse.ninja} for the code inspiration
  * 
  * @see {@link https://github.com/bemusic/bemuse/blob/68e0d5213b56502b3f5812f1d28c8d7075762717/bemuse/src/game/clock.js#L14 The original code}
- * @license AGPL-1.0-or-later
  */
 export class Clock {
   /**

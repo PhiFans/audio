@@ -7,7 +7,6 @@ import { ClipSource } from './clip';
  * @param {AudioContext} audioCtx The AudioContext that needs to be resumed
  * @returns {Promise<boolean>} Return false if resume failed
  * @see {@link https://github.com/bemusic/bemuse/blob/68e0d5213b56502b3f5812f1d28c8d7075762717/bemuse/src/sampling-master/index.js#L276 The origina code}
- * @license AGPL-1.0-or-later
  */
 export const resumeAudioCtx = (audioCtx: AudioContext): Promise<boolean> => {
   if (audioCtx.state === 'running') return new Promise((res) => res(true));
