@@ -26,6 +26,7 @@
     "build:docs": "typedoc --options typedoc.json"
   },
   "devDependencies": {
+    "@types/node": "^22.15.3",
     "typedoc": "^0.28.3",
     "typescript": "~5.7.3",
     "vite": "^6.1.1",

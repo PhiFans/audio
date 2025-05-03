@@ -1,5 +1,9 @@
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
+
+const PackageJson = JSON.parse(readFileSync(resolve(__dirname, './package.json'), { encoding: 'utf-8' })) as { dependencies: Record<string, string> };
 
 export default defineConfig({
   build: {
@@ -10,7 +14,7 @@ export default defineConfig({
       fileName: 'phifans-audio',
     },
     rollupOptions: {
-      external: [ 'audio-decode' ],
+      external: Object.keys(PackageJson.dependencies),
     },
   },
   plugins: [
