@@ -2,7 +2,6 @@ name: Release
 
 on:
   push:
-    branches: [ "master" ]
     tags: [ "v*.*.*" ]
   workflow_dispatch:
 
@@ -32,6 +31,7 @@ jobs:
         uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
+          access: 'public'
       
       - name: Build Changelog
         id: release_changelog
