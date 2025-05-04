@@ -1,4 +1,5 @@
 import audioDecode from 'audio-decode';
+import { GlobalAudioCtx } from './const';
 import { ClipSource } from './clip';
 
 /**
@@ -86,4 +87,14 @@ export const decodeAudio = (source: ClipSource) => {
   }
 
   throw Error('Unsupported source type');
+};
+
+/**
+ * Get the base audio latency,
+ * this is calculated by ([AudioContext.baseLatency](https://developer.mozilla.org/docs/Web/API/AudioContext/baseLatency) + [AudioContext.outputLatency](https://developer.mozilla.org/docs/Web/API/AudioContext/outputLatency)).
+ * @return {number}
+ */
+export const getBaseAudioLatency = () => {
+  const outputLatency = GlobalAudioCtx.outputLatency || 0;
+  return GlobalAudioCtx.baseLatency + outputLatency;
 };
