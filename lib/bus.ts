@@ -59,12 +59,15 @@ export class Bus {
   }
 
   /**
-   * Create a new audio channel.
+   * Create a new audio channel with given name. If the channel exists, we will return the channel directly.
    * @param {string} name - The audio channel name.
    * @returns {Channel} The new audio channel.
    * @see {@link Channel}
    */
   createChannel(name: string): Channel {
+    const existChannel = this.channels.get(name);
+    if (existChannel) return existChannel;
+
     const newChannel = new Channel(this);
     this.channels.set(name, newChannel);
     return newChannel;
