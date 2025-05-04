@@ -20,8 +20,12 @@
   "module": "./dist/phifans-audio.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    "types": "./index.d.ts",
-    "import": "./dist/phifans-audio.js"
+    ".": {
+      "import": {
+        "default": "./dist/phifans-audio.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
   },
   "scripts": {
     "dev": "vite",
