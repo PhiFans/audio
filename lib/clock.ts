@@ -2,9 +2,23 @@ import { Ticker } from './ticker';
 import { resumeAudioCtx } from './utils';
 
 /**
- * The audio clock is a replacement of [`AudioContext.currentTime`](https://developer.mozilla.org/docs/Web/API/BaseAudioContext/currentTime)
+ * An audio clock is a replacement of [AudioContext.currentTime](https://developer.mozilla.org/docs/Web/API/BaseAudioContext/currentTime).
  * 
- * Special thanks to {@link https://github.com/bemusic/bemuse bemuse.ninja} for the code inspiration
+ * You don't need to manually create the audio clock usually; instead you can get the global audio clock via {@link Bus#clock}.
+ * 
+ * You can get the current audio time by {@link Clock#currentTime}:
+ * 
+ * ```js
+ * const clock = bus.clock;
+ * 
+ * function update() {
+ *     console.log('Current audio time:', clock.currentTime);
+ *     requestAnimationFrame(update);
+ * };
+ * update();
+ * ```
+ * 
+ * Special thanks to {@link https://github.com/bemusic/bemuse bemuse.ninja} for the code inspiration.
  * 
  * @see {@link https://github.com/bemusic/bemuse/blob/68e0d5213b56502b3f5812f1d28c8d7075762717/bemuse/src/game/clock.js#L14 The original code}
  */

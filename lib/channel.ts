@@ -4,7 +4,21 @@ import { GlobalAudioTicker, GlobalAudioCtx } from './const';
 import { Ticker } from './ticker';
 
 /**
- * The audio channel is a bridge connecting {@link Bus} and {@link Clip}.
+ * An audio channel is a bridge connecting {@link Bus} and {@link Clip}.
+ * 
+ * You can't create it directly, instead you need to use {@link Bus#createChannel}:
+ * 
+ * ```js
+ * const bus = new Bus();
+ * const channel = bus.createChannel('main');
+ * ```
+ * 
+ * You can adjust channel volume by setting {@link Channel#volume}:
+ * 
+ * ```js
+ * console.log(channel.volume); // Get current channel volume
+ * channel.volume = 0.5; // Set channel volume to 50%;
+ * ```
  */
 export class Channel {
   readonly bus: Bus;
@@ -15,6 +29,8 @@ export class Channel {
    * Clips waiting to be played in next tick.
    * 
    * Clips could be added by {@link Channel#pushClipToQueue}.
+   * 
+   * @see {@link Clip}
    */
   readonly clipQueue: Clip[] = [];
 
@@ -63,12 +79,14 @@ export class Channel {
    * Push clip(s) to {@link Channel#clipQueue}. This/ese clip(s) will be played in next tick.
    * 
    * ```js
-   * const clip = Clip.from('https://example.com/test.mp3');
+   * const clip = await Clip.from('https://example.com/test.mp3');
    * const channel = Bus.createChannel('main');
    * 
    * channel.startTick(); // Remember to start the ticker first!
    * channel.pushClipToQueue(clip); // The clip will be played in next frame.
    * ```
+   * 
+   * @see {@link Channel#clipQueue}
    */
   pushClipToQueue(...clips: Clip[]) {
     return this.clipQueue.push(...clips);

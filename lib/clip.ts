@@ -7,17 +7,28 @@ import { decodeAudio } from './utils';
 export type ClipSource = Blob | ArrayBuffer | string;
 
 /**
- * The audio clip is the playable audio source.
+ * An audio clip handles everything about audio data.
+ * 
+ * You can create an audio clip with a file, an ArrayBuffer, or just pass a url.
+ * 
+ * ```js
+ * const clip = await Clip.from('https://example.com/clip.mp3');
+ * ```
+ * 
+ * You can't play a clip directly; instead you need to either connect the clip to a {@link Channel}:
  * 
  * ```js
  * const channel = Bus.createChannel('main');
- * const clip = Clip.from('https://example.com/test.mp3');
- * 
  * // Connect the clip with an audio channel, could be used to play musics.
  * clip.channel = channel;
  * clip.play(); // Now you can get clip progress via `clip.currentTime`.
+ * ```
  * 
- * // Or push the clip to channel queue, could be used to play SFX, hitsound, etc.
+ * ...or push it to {@link Channel#clipQueue}:
+ * 
+ * ```js
+ * const channel = Bus.createChannel('sfx');
+ * // Push the clip to channel queue, could be used to play SFX, hitsound, etc.
  * channel.startTick(); // Remember to start the ticker first!
  * channel.pushClipToQueue(clip); // The clip will be played in next frame.
  * ```
@@ -60,7 +71,7 @@ export class Clip {
    */
   private _pausedTime: number = NaN;
 
-  constructor( audioBuffer: AudioBuffer, channel: Channel | null = null) {
+  constructor(audioBuffer: AudioBuffer, channel: Channel | null = null) {
     this.source = audioBuffer;
     this._channel = channel;
 

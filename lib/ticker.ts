@@ -8,7 +8,7 @@ export type TickerOptions = {
 };
 
 /**
- * A simple ticker.
+ * A ticker usually used to update {@link Clock} and {@link Channel#clipQueue}.
  * 
  * ```js
  * const ticker = new Ticker();

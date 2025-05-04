@@ -2,15 +2,27 @@ import { Channel } from './channel';
 import { GlobalAudioCtx, GlobalAudioClock, GlobalAudioTicker } from './const';
 
 /**
- * The audio bus is the root entry of the entire audio structure.
+ * An audio bus is the root entry of the whole audio system. You music create it first to use the audio.
+ * 
+ * The audio bus only handles the core part: the global [AudioContext](https://developer.mozilla.org/docs/Web/API/AudioContext), the global {@link Clock}, and
+ * with a master [GainNode](https://developer.mozilla.org/docs/Web/API/GainNode) for controlling the master volume.
+ * 
+ * Audio bus itself doesn't handle anything about {@link Clip}, you must create at lease one {@link Channel} to play a {@link Clip}:
  * 
  * ```js
  * const bus = new Bus();
  * const channel = bus.createChannel('main');
- * const clip = await Clip.from('https://example.com/test.mp3');
+ * const clip = await Clip.from('https://example.com/clip.mp3');
  * 
  * clip.channel = channel;
  * clip.play();
+ * ```
+ * 
+ * You can adjust the master volume by setting {@link Bus#volume}:
+ * 
+ * ```js
+ * console.log(bus.volume); // Get current master volume
+ * bus.volume = 0.5; // Set master volume to 50%;
  * ```
  */
 export class Bus {
@@ -21,6 +33,7 @@ export class Bus {
 
   /**
    * The global {@link Clock}.
+   * @see {@link Clock}
    */
   readonly clock = GlobalAudioClock;
 
@@ -36,6 +49,7 @@ export class Bus {
 
   /**
    * Channels in this bus.
+   * @see {@link Channel}
    */
   readonly channels = new Map<string, Channel>();
 
@@ -48,6 +62,7 @@ export class Bus {
    * Create a new audio channel.
    * @param {string} name - The audio channel name.
    * @returns {Channel} The new audio channel.
+   * @see {@link Channel}
    */
   createChannel(name: string): Channel {
     const newChannel = new Channel(this);
@@ -59,6 +74,7 @@ export class Bus {
    * Delete an audio channel.
    * @param {string} name - The audio channel name.
    * @returns {boolean} Return true if the channel exists.
+   * @see {@link Channel}
    */
   removeChannel(name: string): boolean {
     const channel = this.channels.get(name);
