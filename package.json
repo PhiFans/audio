@@ -2,6 +2,7 @@
   "name": "@phifans/audio",
   "version": "0.0.0",
   "license": "MIT",
+  "homepage": "https://phifans.github.io/audio/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PhiFans/audio.git"
