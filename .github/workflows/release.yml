@@ -9,6 +9,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
+    concurrency:
+      group: 'release'
+      cancel-in-progress: false
+
     steps:
       - uses: actions/checkout@v4
     
