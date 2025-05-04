@@ -1,6 +1,6 @@
 # @PhiFans/audio
 
-Another web audio library.
+Another WebAudio library.
 
 
 ## Install 
