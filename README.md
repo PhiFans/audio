@@ -22,8 +22,8 @@ const bus = new Bus();
 const musicChannel = bus.createChannel('music');
 const sfxChannel = bus.createChannel('sfx');
 
-const musicClip = Clip.from('https://www.example.com/music.mp3');
-const sfxClip = Clip.from('https://www.example.com/sfx.mp3');
+const musicClip = await Clip.from('https://example.com/music.mp3');
+const sfxClip = await Clip.from('https://example.com/sfx.mp3');
 
 // Play a music
 musicClip.channel = musicChannel;
