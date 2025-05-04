@@ -1,5 +1,7 @@
 import { Channel } from './channel';
 import { GlobalAudioCtx, GlobalAudioClock, GlobalAudioTicker } from './const';
+import { Clock } from './clock';
+import { Ticker } from './ticker';
 
 /**
  * An audio bus is the root entry of the whole audio system. You music create it first to use the audio.
@@ -35,12 +37,12 @@ export class Bus {
    * The global {@link Clock}.
    * @see {@link Clock}
    */
-  readonly clock = GlobalAudioClock;
+  readonly clock: Clock = GlobalAudioClock;
 
   /**
    * The global {@link Ticker}.
    */
-  readonly ticker = GlobalAudioTicker;
+  readonly ticker: Ticker = GlobalAudioTicker;
 
   /**
    * The [`GainNode`](https://developer.mozilla.org/docs/Web/API/GainNode) of the audio bus, used to control the master volume.
