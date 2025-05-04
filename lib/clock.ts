@@ -51,8 +51,10 @@ export class Clock {
   }
 
   private onAudioCtxStateChanged() {
-    if (this._audioCtx.state !== 'running') return;
-    this._ticker.add(this.tick);
+    if (this._audioCtx.state === 'running')
+      this._ticker.add(this.tick);
+    else
+      this._ticker.remove(this.tick);
   }
 
   private tick() {

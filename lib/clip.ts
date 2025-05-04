@@ -1,5 +1,3 @@
-/// <reference types="./lib.d.ts" />
-
 import { GlobalAudioClock, GlobalAudioCtx } from './const';
 import { Channel } from './channel';
 import { decodeAudio, getBaseAudioLatency } from './utils';
@@ -105,11 +103,7 @@ export class Clip {
     if (!this._channel) throw Error('Can\'t play an audio clip directly without any channel.');
     if (this._status === 1) return;
 
-    if ('setImmediate' in window) {
-      window.setImmediate(this._play);
-    } else {
-      setTimeout(this._play, 10);
-    }
+    setImmediate(this._play);
   }
 
   private _play() {

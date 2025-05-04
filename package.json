@@ -1,7 +1,9 @@
 {
   "name": "@phifans/audio",
   "description": "Another WebAudio library",
-  "keywords": [ "WebAudio" ],
+  "keywords": [
+    "WebAudio"
+  ],
   "version": "0.0.4",
   "license": "MIT",
   "homepage": "https://phifans.github.io/audio/",
@@ -40,6 +42,8 @@
     "vite-plugin-dts": "^4.5.3"
   },
   "dependencies": {
-    "audio-decode": "^2.2.2"
+    "@types/setimmediate": "^1.0.4",
+    "audio-decode": "^2.2.2",
+    "setimmediate": "^1.0.5"
   }
 }
