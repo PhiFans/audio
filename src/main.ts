@@ -8,6 +8,7 @@ const doms = {
   fileImport: qs<HTMLInputElement>('#file-import'),
   progressBar: qs<HTMLInputElement>('#progress-bar'),
   playButton: qs<HTMLButtonElement>('#button-play'),
+  playQueueButton: qs<HTMLButtonElement>('#button-play-queue'),
   pauseButton: qs<HTMLButtonElement>('#button-pause'),
   stopButton: qs<HTMLButtonElement>('#button-stop'),
   timeCurrent: qs<HTMLDivElement>('#time-current'),
@@ -21,6 +22,7 @@ const doms = {
 
 const audioBus = new Bus();
 const audioChannel = audioBus.createChannel('main');
+const audioChannelSfx = audioBus.createChannel('sfx');
 let audioClip: Clip | null = null;
 
 doms.fileImport?.addEventListener('input', () => {
@@ -58,6 +60,11 @@ doms.progressBar?.addEventListener('input', () => {
 
   audioClip.seek(value);
   doms.timeCurrent!.innerText = timeToString(audioClip.currentTime);
+});
+
+doms.playQueueButton?.addEventListener('click', () => {
+  if (!audioClip) return;
+  audioChannelSfx.pushClipToQueue(audioClip);
 });
 
 doms.playButton?.addEventListener('click', () => {
@@ -100,6 +107,8 @@ doms.speedBar?.addEventListener('input', () => {
 });
 
 window.addEventListener('load', () => {
+  audioChannelSfx.startTick();
+
   setInterval(() => {
     if (!audioClip) return;
 
