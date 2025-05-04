@@ -22,8 +22,8 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/phifans-audio.js",
-        "types": "./dist/index.d.ts"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/phifans-audio.js"
       }
     }
   },
