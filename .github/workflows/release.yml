@@ -45,6 +45,8 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          mode: 'HYBRID'
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
