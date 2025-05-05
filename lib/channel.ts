@@ -21,9 +21,25 @@ import { Ticker } from './ticker';
  * ```
  */
 export class Channel {
+  /**
+   * The name of this channel.
+   */
   readonly name: string;
+
+  /**
+   * The bus that owned this channel.
+   * @see {@link Bus}
+   */
   readonly bus: Bus;
+
+  /**
+   * The ticker of this channel, used to update {@link Channel#clipQueue}.
+   */
   readonly ticker: Ticker = GlobalAudioTicker;
+
+  /**
+   * The [`GainNode`](https://developer.mozilla.org/docs/Web/API/GainNode) of the audio channel.
+   */
   readonly gain: GainNode;
 
   /**
