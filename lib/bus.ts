@@ -64,7 +64,7 @@ export class Bus {
     const existChannel = this.channels.get(name);
     if (existChannel) return existChannel;
 
-    const newChannel = new Channel(this);
+    const newChannel = new Channel(name, this);
     this.channels.set(name, newChannel);
     return newChannel;
   }

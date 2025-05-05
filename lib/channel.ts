@@ -21,6 +21,7 @@ import { Ticker } from './ticker';
  * ```
  */
 export class Channel {
+  readonly name: string;
   readonly bus: Bus;
   readonly ticker: Ticker = GlobalAudioTicker;
   readonly gain: GainNode;
@@ -36,7 +37,8 @@ export class Channel {
 
   private _isTickStart = false;
 
-  constructor(bus: Bus) {
+  constructor(name: string, bus: Bus) {
+    this.name = name;
     this.bus = bus;
     this.gain = bus.audioCtx.createGain();
     this.gain.connect(bus.gain);
