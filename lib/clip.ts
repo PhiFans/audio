@@ -1,6 +1,6 @@
 import { GlobalAudioClock, GlobalAudioCtx } from './const';
 import { Channel } from './channel';
-import { decodeAudio, getBaseAudioLatency } from './utils';
+import { decodeAudio } from './utils';
 
 export type ClipSource = Blob | ArrayBuffer | string;
 
@@ -117,11 +117,11 @@ export class Clip {
     
     if (isNaN(this._pausedTime) || this._loop) {
       this._buffer.start(0, 0);
-      this._startTime = GlobalAudioClock.currentTime + getBaseAudioLatency();
+      this._startTime = GlobalAudioClock.currentTime;
     } else {
       const pausedTime = this._pausedTime - this._startTime;
       this._buffer.start(0, pausedTime * this._speed);
-      this._startTime = (GlobalAudioClock.currentTime - pausedTime) + getBaseAudioLatency();
+      this._startTime = GlobalAudioClock.currentTime - pausedTime;
     }
 
     this._pausedTime = NaN;
@@ -135,7 +135,7 @@ export class Clip {
     if (this._status !== 1) return;
 
     this._disconnectBuffer();
-    this._pausedTime = GlobalAudioClock.currentTime + getBaseAudioLatency();
+    this._pausedTime = GlobalAudioClock.currentTime;
     this._status = 0;
   }
 
@@ -235,8 +235,8 @@ export class Clip {
     if (this._status !== -1) {
       const { currentTime } = GlobalAudioClock;
       const timeDiff = (isNaN(this._pausedTime) ? currentTime : this._pausedTime) - this._startTime;
-      this._startTime = currentTime - (timeDiff * this._speed) / speed + getBaseAudioLatency();
-      if (!isNaN(this._pausedTime)) this._pausedTime = currentTime + getBaseAudioLatency();
+      this._startTime = currentTime - (timeDiff * this._speed) / speed;
+      if (!isNaN(this._pausedTime)) this._pausedTime = currentTime;
     }
 
     this._speed = speed;

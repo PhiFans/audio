@@ -90,6 +90,15 @@ export class Bus {
   }
 
   /**
+   * Get the base audio latency,
+   * this is calculated by ([AudioContext.baseLatency](https://developer.mozilla.org/docs/Web/API/AudioContext/baseLatency) + [AudioContext.outputLatency](https://developer.mozilla.org/docs/Web/API/AudioContext/outputLatency)).
+   */
+  get audioLatency() {
+    const outputLatency = this.audioCtx.outputLatency || 0;
+    return this.audioCtx.baseLatency + outputLatency;
+  }
+
+  /**
    * Get the volume of this audio bus
    */
   get volume() {
