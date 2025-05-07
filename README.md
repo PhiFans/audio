@@ -1,4 +1,4 @@
-# @PhiFans/audio
+# [![npm badge](https://nodei.co/npm/@phifans/audio.png?downloads=true&stars=true)](https://www.npmjs.com/package/@phifans/audio)
 
 Another WebAudio library.
 
