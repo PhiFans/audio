@@ -7,6 +7,8 @@ export type TickerOptions = {
   autoStart?: boolean,
 };
 
+export type TickerCallback = (timestamp: number) => void;
+
 /**
  * A ticker usually used to update {@link Clock} and {@link Channel#clipQueue}.
  * 
@@ -20,8 +22,11 @@ export type TickerOptions = {
  * ```
  */
 export class Ticker {
-  private _callbacks: Function[] = [];
+  fps = 60;
+
+  private _callbacks: TickerCallback[] = [];
   private _frameID: number = NaN;
+  private _lastTime = 0;
 
   constructor(options?: TickerOptions) {
     const _options: Required<TickerOptions> = {
@@ -55,7 +60,7 @@ export class Ticker {
    * Add a function to ticker, function added will be called every frame.
    * @param {Function} callback 
    */
-  add(callback: Function) {
+  add(callback: TickerCallback) {
     this._callbacks.push(callback);
   }
 
@@ -63,15 +68,18 @@ export class Ticker {
    * Remove function from ticker.
    * @param {Function} callback 
    */
-  remove(callback: Function) {
+  remove(callback: TickerCallback) {
     this._callbacks = this._callbacks.filter((e) => e !== callback);
   }
 
-  private tick() {
+  private tick(timestamp: number) {
     if (isNaN(this._frameID)) return;
 
+    this.fps = 1000 / (timestamp - this._lastTime);
+    this._lastTime = timestamp;
+
     for (const callback of this._callbacks) {
-      callback();
+      callback(timestamp);
     }
 
     this._frameID = requestAnimationFrame(this.tick);

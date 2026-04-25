@@ -58,14 +58,14 @@ export class Clock {
   }
 
   private tick() {
-    const { _audioCtx, _offsets } = this;
+    const { _audioCtx, _offsets, _ticker } = this;
     const realTime = performance.now() / 1000;
-    const delta = realTime - (_audioCtx.currentTime);
+    const delta = realTime - _audioCtx.currentTime;
 
     _offsets.push(delta);
     this._sum += delta;
 
-    while (_offsets.length > 60) {
+    while (_offsets.length > _ticker.fps) {
       this._sum -= _offsets.shift()!;
     }
 
