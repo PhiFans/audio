@@ -1,5 +1,6 @@
 
 const FPS_WINDOW_TIME = 10;
+const MEASURE_WARMUP_MS = 500;
 const MEASURE_DURATION = 60;
 
 export type TickerOptions = {
@@ -36,7 +37,8 @@ export class Ticker {
   private readonly _frameTimes: number[] = [];
 
   private _measuring = false;
-  private _measureStartTime: number = 0;
+  private _measureStartTime: number = -1;
+  private _measureStartWallTime: number = -1;
   private _measureFrameCount: number = 0;
 
   constructor(options?: TickerOptions) {
@@ -90,7 +92,7 @@ export class Ticker {
       const deltaTime = timestamp - this._lastTime;
 
       if (this._measuring)
-        this._measureRefreshRate(timestamp, deltaTime);
+        this._measureRefreshRate(timestamp);
 
       this._frameTimes.push(deltaTime);
       if (this._frameTimes.length > FPS_WINDOW_TIME) {
@@ -105,7 +107,7 @@ export class Ticker {
       this.fps = 1000 / avgDelta;
     } else {
       this._measuring = true;
-      this._measureStartTime = timestamp;
+      this._measureStartWallTime = timestamp;
       this._measureFrameCount = 0;
     }
 
@@ -118,7 +120,16 @@ export class Ticker {
     this._frameID = requestAnimationFrame(this.tick);
   }
 
-  private _measureRefreshRate(timestamp: number, deltaTime: number) {
+  private _measureRefreshRate(timestamp: number) {
+    if (this._measureStartTime <= 0) {
+      const warmupDuration = timestamp - this._measureStartWallTime;
+      if (warmupDuration < MEASURE_WARMUP_MS) {
+        return;
+      }
+
+      this._measureStartTime = timestamp;
+    }
+
     this._measureFrameCount++;
     if (this._measureFrameCount >= MEASURE_DURATION) {
       const totalTime = timestamp - this._measureStartTime;
