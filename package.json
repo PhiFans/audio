@@ -5,6 +5,7 @@
     "WebAudio"
   ],
   "version": "0.0.7",
+  "packageManager": "pnpm@12.4.2",
   "license": "MIT",
   "homepage": "https://phifans.github.io/audio/",
   "repository": {

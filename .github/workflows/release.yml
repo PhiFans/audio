@@ -4,6 +4,11 @@ on:
   push:
     tags: [ "v*.*.*" ]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag'
+        required: true
+        type: string
 
 jobs:
   release:
@@ -11,34 +16,68 @@ jobs:
 
     permissions:
       contents: write
+      id-token: write
 
     concurrency:
       group: 'release'
       cancel-in-progress: false
 
     steps:
-      - uses: actions/checkout@v4
-    
-      - name: Use pnpm
-        uses: pnpm/action-setup@v2
+      - name: Select release tag
+        id: target
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo 'Expected a version tag such as v0.0.8 or v0.0.8-beta.1' >&2
+            exit 1
+          fi
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v6
         with:
-          version: latest
-          run_install: false
+          ref: refs/tags/${{ steps.target.outputs.tag }}
+          fetch-depth: 0
 
       - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22.x'
-          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+
+      - name: Validate release version
+        id: version
+        env:
+          RELEASE_TAG: ${{ steps.target.outputs.tag }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, appendFileSync } from 'node:fs';
+          const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
+          // npm versions without build metadata; numeric prerelease identifiers cannot have leading zeros.
+          const numeric = '(0|[1-9][0-9]*)';
+          const identifier = '(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)';
+          const semver = new RegExp(`^${numeric}\\.${numeric}\\.${numeric}(?:-${identifier}(?:\\.${identifier})*)?$`);
+          if (typeof version !== 'string' || !semver.test(version) || process.env.RELEASE_TAG !== `v${version}`) {
+            throw new Error(`Tag ${process.env.RELEASE_TAG} must match a valid package.json version: v${version}`);
+          }
+          const prerelease = version.includes('-');
+          appendFileSync(process.env.GITHUB_OUTPUT, `dist-tag=${prerelease ? 'next' : 'latest'}\nprerelease=${prerelease}\n`);
+          NODE
+
+      - name: Use pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
-      - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          access: 'public'
+      - name: Use npm with trusted publishing support
+        run: npm install --global npm@11.6.2
+
+      - name: Check package contents
+        run: npm pack --dry-run
       
       - name: Build Changelog
         id: release_changelog
@@ -47,8 +86,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           mode: 'HYBRID'
+          toTag: ${{ steps.target.outputs.tag }}
+          failOnError: true
+
+      - name: Publish to npm using OIDC
+        env:
+          NPM_DIST_TAG: ${{ steps.version.outputs.dist-tag }}
+        run: npm publish --access public --tag "$NPM_DIST_TAG"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.target.outputs.tag }}
+          prerelease: ${{ steps.version.outputs.prerelease == 'true' }}
+          make_latest: ${{ steps.version.outputs.prerelease == 'false' }}
           body: ${{ steps.release_changelog.outputs.changelog }}
