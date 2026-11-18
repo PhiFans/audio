@@ -41,8 +41,7 @@ export class Clock {
   private _offsetIndex: number = 0;
   private _offsetCount: number = 0;
 
-  private _mean: number = 0;
-  private _M2: number = 0;
+  private _sum: number = 0;
 
   private _lastAdjustTime = 0;
 
@@ -80,23 +79,23 @@ export class Clock {
   }
 
   private tick() {
-    const { _audioCtx, _offsets } = this;
+    const { _audioCtx } = this;
     const now = performance.now();
     const realTime = now / 1000;
     const delta = realTime - _audioCtx.currentTime;
 
-    _offsets[this._offsetIndex] = delta;
-    this._offsetIndex = (this._offsetCount + 1) % this._windowSize;
+    const oldDelta = this._offsets[this._offsetIndex];
+    this._offsets[this._offsetIndex] = delta;
+    this._offsetIndex = (this._offsetIndex + 1) % this._windowSize;
 
-    if (this._offsetIndex < this._windowSize)
+    if (this._offsetCount < this._windowSize) {
       this._offsetCount++;
-  
-    const n = this._offsetCount;
-    const oldMean = this._mean;
-    this._mean = oldMean + (delta - oldMean) / n;
-    this._M2 += (delta - oldMean) * (delta - this._mean);
+      this._sum += delta;
+    } else {
+      this._sum += (delta - oldDelta);
+    }
 
-    this.currentTime = realTime - this._mean;
+    this.currentTime = realTime - (this._sum / this._offsetCount);
 
     if (now - this._lastAdjustTime > ADJUST_INTERVAL) {
       this._adjustWindowSize();
@@ -112,6 +111,7 @@ export class Clock {
       MIN_WINDOW_SIZE,
       Math.min(MAX_WINDOW_SIZE, targetSize)
     );
+    if (isNaN(clampedSize)) return;
 
     const sizeRatio = clampedSize / this._windowSize;
     if (sizeRatio > 0.9 && sizeRatio < 1.1)
@@ -139,16 +139,9 @@ export class Clock {
   }
 
   private _recalculateStats() {
-    this._mean = 0;
-    this._M2 = 0;
-
-    for (let i = 0; i < this._offsetCount; i++) {
-      const delta = this._offsets[i];
-      const oldMean = this._mean;
-      const n = i + 1;
-
-      this._mean = oldMean + (delta - oldMean) / n;
-      this._M2 += (delta - oldMean) * (delta - this._mean);
+    this._sum = 0;
+    for (let i = 0; i < this._offsetCount; i++){
+      this._sum += this._offsets[i];
     }
   }
 }
