@@ -28,8 +28,6 @@ export type TickerCallback = (timestamp: number) => void;
 export class Ticker {
   fps = 60;
 
-  measuredRefreshRate: number | null = null;
-
   private _callbacks: TickerCallback[] = [];
   private _frameID: number = NaN;
   private _lastTime = 0;
@@ -40,6 +38,7 @@ export class Ticker {
   private _measureStartTime: number = -1;
   private _measureStartWallTime: number = -1;
   private _measureFrameCount: number = 0;
+  private _measuredRefreshRate: number | null = null;
 
   constructor(options?: TickerOptions) {
     const _options: Required<TickerOptions> = {
@@ -133,11 +132,15 @@ export class Ticker {
     this._measureFrameCount++;
     if (this._measureFrameCount >= MEASURE_DURATION) {
       const totalTime = timestamp - this._measureStartTime;
-      this.measuredRefreshRate = Math.round(
+      this._measuredRefreshRate = Math.round(
         (MEASURE_DURATION * 1000) / totalTime
       );
       this._measuring = false;
       console.info('[Ticker] Measured refresh rate:', this.measuredRefreshRate, 'Hz');
     }
+  }
+
+  get measuredRefreshRate() {
+    return this._measuredRefreshRate;
   }
 }
