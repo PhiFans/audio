@@ -1,4 +1,6 @@
 
+const FPS_WINDOW_TIME = 10;
+
 export type TickerOptions = {
   /**
    * Start the ticker when created?
@@ -22,11 +24,13 @@ export type TickerCallback = (timestamp: number) => void;
  * ```
  */
 export class Ticker {
-  fps = 60;
+  fps = 120;
 
   private _callbacks: TickerCallback[] = [];
   private _frameID: number = NaN;
   private _lastTime = 0;
+
+  private readonly _frameTimes: number[] = [];
 
   constructor(options?: TickerOptions) {
     const _options: Required<TickerOptions> = {
@@ -75,7 +79,21 @@ export class Ticker {
   private tick(timestamp: number) {
     if (isNaN(this._frameID)) return;
 
-    this.fps = 1000 / (timestamp - this._lastTime);
+    if (this._lastTime > 0) {
+      const deltaTime = timestamp - this._lastTime;
+
+      this._frameTimes.push(deltaTime);
+      if (this._frameTimes.length > FPS_WINDOW_TIME) {
+        this._frameTimes.shift();
+      }
+
+      const avgDelta = (
+        this._frameTimes.reduce((sum, dt) => sum + dt, 0) /
+        this._frameTimes.length
+      );
+
+      this.fps = 1000 / avgDelta;
+    }
     this._lastTime = timestamp;
 
     for (const callback of this._callbacks) {
