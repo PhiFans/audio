@@ -1,5 +1,6 @@
 
 const FPS_WINDOW_TIME = 10;
+const MEASURE_DURATION = 60;
 
 export type TickerOptions = {
   /**
@@ -24,13 +25,19 @@ export type TickerCallback = (timestamp: number) => void;
  * ```
  */
 export class Ticker {
-  fps = 120;
+  fps = 60;
+
+  measuredRefreshRate: number | null = null;
 
   private _callbacks: TickerCallback[] = [];
   private _frameID: number = NaN;
   private _lastTime = 0;
 
   private readonly _frameTimes: number[] = [];
+
+  private _measuring = false;
+  private _measureStartTime: number = 0;
+  private _measureFrameCount: number = 0;
 
   constructor(options?: TickerOptions) {
     const _options: Required<TickerOptions> = {
@@ -82,6 +89,9 @@ export class Ticker {
     if (this._lastTime > 0) {
       const deltaTime = timestamp - this._lastTime;
 
+      if (this._measuring)
+        this._measureRefreshRate(timestamp, deltaTime);
+
       this._frameTimes.push(deltaTime);
       if (this._frameTimes.length > FPS_WINDOW_TIME) {
         this._frameTimes.shift();
@@ -93,7 +103,12 @@ export class Ticker {
       );
 
       this.fps = 1000 / avgDelta;
+    } else {
+      this._measuring = true;
+      this._measureStartTime = timestamp;
+      this._measureFrameCount = 0;
     }
+
     this._lastTime = timestamp;
 
     for (const callback of this._callbacks) {
@@ -101,5 +116,17 @@ export class Ticker {
     }
 
     this._frameID = requestAnimationFrame(this.tick);
+  }
+
+  private _measureRefreshRate(timestamp: number, deltaTime: number) {
+    this._measureFrameCount++;
+    if (this._measureFrameCount >= MEASURE_DURATION) {
+      const totalTime = timestamp - this._measureStartTime;
+      this.measuredRefreshRate = Math.round(
+        (MEASURE_DURATION * 1000) / totalTime
+      );
+      this._measuring = false;
+      console.info('[Ticker] Measured refresh rate:', this.measuredRefreshRate, 'Hz');
+    }
   }
 }
